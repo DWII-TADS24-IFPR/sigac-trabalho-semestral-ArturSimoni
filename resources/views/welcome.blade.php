@@ -4,43 +4,103 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SIGAC - Sistema de Gestão de Atividades Complementares</title>
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @endif
+
+    {{-- Bootstrap 5 CDN --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    {{-- Google Fonts (opcional) --}}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    {{-- Estilo personalizado --}}
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to top right, #121212, #1f1f1f);
+            color: #f8f9fa;
+        }
+
+        .navbar-custom {
+            background-color: #000;
+        }
+
+        .btn-outline-light:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .hero-img {
+            border: 4px solid #343a40;
+            border-radius: 1rem;
+            box-shadow: 0 0 30px rgba(0,0,0,0.4);
+        }
+
+        footer {
+            background-color: #111;
+            color: #bbb;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+        }
+    </style>
 </head>
-<body class="min-h-screen bg-gradient-to-tr from-blue-100 via-white to-blue-200 dark:from-blue-950 dark:via-blue-900 dark:to-blue-800 flex flex-col">
-    <header class="w-full px-8 py-6 flex justify-between items-center bg-white/80 dark:bg-blue-950/80 shadow-md">
-        <span class="font-extrabold text-2xl text-blue-800 dark:text-blue-200 tracking-widest">SIGAC</span>
-        @if (Route::has('login'))
-            <nav class="flex items-center gap-4">
-                @auth
-                    <a href="{{ url('/dashboard') }}" class="px-6 py-2 rounded-full border-2 border-blue-200 dark:border-blue-700 text-blue-800 dark:text-blue-100 font-semibold hover:bg-blue-700 hover:text-white dark:hover:bg-blue-500 transition">Dashboard</a>
-                @else
-                    <a href="{{ route('login') }}" class="px-6 py-2 rounded-full border-2 border-blue-200 dark:border-blue-700 text-blue-800 dark:text-blue-100 font-semibold hover:bg-blue-700 hover:text-white dark:hover:bg-blue-500 transition">Entrar</a>
-                @endauth
-            </nav>
-        @endif
-    </header>
-    <main class="flex-1 flex flex-col items-center justify-center gap-12 px-6 py-12">
-        <section class="w-full max-w-2xl flex flex-col justify-center items-center text-center">
-            <h1 class="text-4xl lg:text-6xl font-black mb-6 text-blue-900 dark:text-blue-200 leading-tight drop-shadow">Sua vida acadêmica mais organizada</h1>
-            <p class="text-lg text-blue-900/80 dark:text-blue-100/80 mb-8">O SIGAC é o sistema ideal para gerenciar, acompanhar e validar suas atividades complementares universitárias. Simples, rápido e eficiente para alunos e coordenadores.</p>
-            @if (Route::has('login'))
-                <a href="{{ route('login') }}" class="inline-block px-10 py-3 bg-blue-700 dark:bg-blue-500 text-white font-bold rounded-full shadow-lg hover:bg-blue-900 dark:hover:bg-blue-700 transition text-xl">Acessar o sistema</a>
-            @endif
-        </section>
-        <aside class="w-full max-w-md flex items-center justify-center">
-            <div class="relative flex justify-center w-full">
-                <div class="absolute -top-8 -left-8 w-32 h-32 bg-blue-200 dark:bg-blue-900 rounded-full blur-2xl opacity-60"></div>
-                <img src="https://img.freepik.com/vetores-gratis/ideia-de-estrategia-de-crescimento-de-lucro-solucao-de-desenvolvimento-de-negocios_335657-3160.jpg" class="rounded-2xl shadow-2xl border-4 border-blue-100 dark:border-blue-800 relative z-10">
-                <div class="absolute -bottom-8 -right-8 w-24 h-24 bg-blue-400 dark:bg-blue-700 rounded-full blur-2xl opacity-40"></div>
+<body>
+
+    {{-- Navbar --}}
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold text-uppercase tracking-widest" href="#">SIGAC</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    @auth
+                        <li class="nav-item">
+                            <a href="{{ url('/dashboard') }}" class="nav-link">Dashboard</a>
+                        </li>
+                    @else
+                        <li class="nav-item">
+                            <a href="{{ route('login') }}" class="btn btn-outline-light me-2">Entrar</a>
+                        </li>
+                        @if (Route::has('register'))
+                            <li class="nav-item">
+                                <a href="{{ route('register') }}" class="btn btn-light text-dark">Registrar</a>
+                            </li>
+                        @endif
+                    @endauth
+                </ul>
             </div>
-        </aside>
+        </div>
+    </nav>
+
+    {{-- Hero --}}
+    <main class="container py-5 d-flex flex-column align-items-center text-center">
+        <div class="glass mb-5">
+            <h1 class="display-4 fw-bold mb-3">Sua vida acadêmica mais organizada</h1>
+            <p class="lead mb-4">
+                O SIGAC é o sistema ideal para gerenciar, acompanhar e validar suas atividades complementares universitárias. Simples, rápido e eficiente para alunos e coordenadores.
+            </p>
+            @if (Route::has('login'))
+                <a href="{{ route('login') }}" class="btn btn-primary btn-lg">Acessar o sistema</a>
+            @endif
+        </div>
+
+        {{-- Imagem --}}
+        <div class="position-relative">
+            <img src="https://img.freepik.com/vetores-gratis/ideia-de-estrategia-de-crescimento-de-lucro-solucao-de-desenvolvimento-de-negocios_335657-3160.jpg" class="img-fluid hero-img" alt="SIGAC Ilustração" style="max-width: 600px;">
+        </div>
     </main>
-    <footer class="py-6 text-center text-blue-900 dark:text-blue-200 text-sm bg-white/60 dark:bg-blue-950/60 border-t border-blue-100 dark:border-blue-800">
+
+    {{-- Rodapé --}}
+    <footer class="text-center py-4 mt-auto">
         &copy; {{ date('Y') }} SIGAC - Sistema de Gestão de Atividades Complementares
     </footer>
+
 </body>
 </html>
